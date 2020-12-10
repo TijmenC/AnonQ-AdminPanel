@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import "../styling/AdminPanel.css"
-import QuestionService from "../services/QuestionService"
 import Question from "../components/Question";
 import axios from "axios"
 
@@ -9,6 +8,10 @@ import axios from "axios"
 function AdminPanel() {
     const [allquestions, setAllQuestions] = useState([]);
     useEffect(() => {
+        getQuestions()
+    }, []);
+
+    const getQuestions = () => {
         axios.get('https://localhost:44348/api/question')
         .then(function (response) {
           setAllQuestions(response.data)
@@ -16,13 +19,15 @@ function AdminPanel() {
         .catch(function (error) {
           console.log(error);
         })
-    }, []);
+    }
     
     return (
-        <div className="">
+        <div className="rounded container">
+            <h2>Questions</h2>
             {allquestions.map((question, idx) => (
-                    <Question key={question.id} question={question}  />
+                    <Question key={question.id} question={question} refreshQuestions={getQuestions}  />
                 ))}
+                
             </div>
     );
 }

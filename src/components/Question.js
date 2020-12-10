@@ -2,8 +2,10 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 import { Card, Image, Modal, Button, Container, Row, Col } from 'react-bootstrap';
+import axios from "axios"
+import "../styling/Question.css"
 
-function Question({ question }) {
+function Question({ question, refreshQuestions }) {
 
     const [show, setShow] = useState(false);
     const [date, setDate] = useState();
@@ -11,12 +13,25 @@ function Question({ question }) {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
+    const handleDelete = () => {
+        axios.delete('https://localhost:44348/api/question/DeleteQuestionAndPolls/' + question.id)
+        .then(function (response) {
+            handleClose()
+            refreshQuestions()
+        })
+        .catch(function (error) {
+          console.log(error);
+        })
+
+    }
+
     function HumanDateTime(dates) {
         var date = new Date(dates + "Z");
         date = date.toUTCString().split(", ");
         date = date[1].slice(0, 17);
         setDate(date);
       }
+
     
       useEffect(() => {
         if (question.deletionTime != undefined) {
@@ -26,7 +41,7 @@ function Question({ question }) {
 
     return (
         <>
-            <div className="rounded container">
+            <div className="rounded container QuestionDiv">
                 <Row>
                     <Col md="1">{question.id}</Col>
                     <Col md="1">{question.title}</Col>
@@ -45,7 +60,7 @@ function Question({ question }) {
                     <Button variant="secondary" onClick={handleClose}>
                         Close
           </Button>
-                    <Button variant="primary" onClick={handleClose}>
+                    <Button variant="primary"  onClick={handleDelete}>
                         Delete Question
           </Button>
                 </Modal.Footer>
