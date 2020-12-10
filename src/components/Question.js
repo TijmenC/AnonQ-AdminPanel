@@ -1,23 +1,43 @@
 
 import React from 'react';
 import { useEffect, useState } from 'react';
-import { Card, Image, Modal, Button, Container, Row, Col } from 'react-bootstrap';
+import {  Modal, Button, Row, Col } from 'react-bootstrap';
 import axios from "axios"
 import "../styling/Question.css"
+import Comment from "./Comment"
+
 
 function Question({ question, refreshQuestions }) {
 
     const [show, setShow] = useState(false);
+    const [comments, setComments] = useState([]);
     const [date, setDate] = useState();
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
+    useEffect(() => {
+        handleComments()
+      }, [question.id]);
+
     const handleDelete = () => {
         axios.delete('https://localhost:44348/api/question/DeleteQuestionAndPolls/' + question.id)
         .then(function (response) {
+            console.log(response)
             handleClose()
             refreshQuestions()
+        })
+        .catch(function (error) {
+          console.log(error);
+        })
+
+    }
+
+    const handleComments = () => {
+        axios.get('https://localhost:44348/api/comment/' + question.id + '/GetAllCommentsID')
+        .then(function (response) {
+            console.log(response)
+            setComments(response.data)
         })
         .catch(function (error) {
           console.log(error);
@@ -34,7 +54,7 @@ function Question({ question, refreshQuestions }) {
 
     
       useEffect(() => {
-        if (question.deletionTime != undefined) {
+        if (question.deletionTime !== undefined) {
           HumanDateTime(question.deletionTime);
         }
       }, [question.deleteTime]);
@@ -49,6 +69,7 @@ function Question({ question, refreshQuestions }) {
                     <Col md="2">{date}</Col>
                     <Col md="1">{question.commentsEnabled.toString()}</Col>
                     <Col md="2"><Button onClick={handleShow}>Show Actions</Button></Col>
+                    <Col md="2"><Comment comments={comments} refreshComments={handleComments} /></Col>
                 </Row>
             </div>
             <Modal show={show} onHide={handleClose}>
