@@ -1,6 +1,11 @@
-# Getting Started with Create React App
+# AnonQ Admin Panel
+This is the admin panel for an anonymous question asking website. On this website you can post a question which will be deleted in (x) hours. You can also create polls when you create a question to get input of other users. To get even more input you can enable comments which can be left anonymously by any user. In this admin panel you can view all created post, delete specefic comments and delete questions.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Installation
+
+```bash
+npm install
+```
 
 ## Available Scripts
 
