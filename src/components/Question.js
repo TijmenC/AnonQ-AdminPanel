@@ -45,26 +45,21 @@ function Question({ question, refreshQuestions }) {
 
     }
 
-    function HumanDateTime(dates) {
-        var date = new Date(dates + "Z");
+    useEffect(() => {
+        var date = new Date(question.deletionTime + "Z");
         date = date.toUTCString().split(", ");
         date = date[1].slice(0, 17);
         setDate(date);
-      }
-
     
-      useEffect(() => {
-        if (question.deletionTime !== undefined) {
-          HumanDateTime(question.deletionTime);
-        }
-      }, [question.deleteTime]);
+  }, [question.deletionTime]);
+
 
     return (
         <>
             <div className="rounded container QuestionDiv">
                 <Row>
                     <Col md="1">{question.id}</Col>
-                    <Col md="1">{question.title}</Col>
+                    <Col md="3">{question.title}</Col>
                     <Col md="1">{question.tag}</Col>
                     <Col md="2">{date}</Col>
                     <Col md="1">{question.commentsEnabled.toString()}</Col>
